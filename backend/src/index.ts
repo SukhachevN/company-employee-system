@@ -1,9 +1,12 @@
 import express from 'express';
+import cors from 'cors';
 import { createStartData, getPaginatedResult } from './utils';
 
 const { companies, employees } = createStartData();
 
 const app = express();
+
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.json('Possible routes: /companies, /employees');

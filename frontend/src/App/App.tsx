@@ -1,7 +1,13 @@
+import { Companies } from '../components/Screens/Companies';
+
 import './styles.scss';
 
 const App = () => {
-  return <div className='App'></div>;
+  return (
+    <main>
+      <Companies />
+    </main>
+  );
 };
 
 export default App;
