@@ -1,11 +1,11 @@
 import { createCompany, createEmployee } from './fakerFunctions';
-import { Company, Employee } from './interfaces';
+import { ICompany, IEmployee } from './interfaces';
 
 export const limit = 20;
 
 export const createStartData = () => {
-  const companies: Company[] = [];
-  const employees: Employee[] = [];
+  const companies: ICompany[] = [];
+  const employees: IEmployee[] = [];
 
   const randomCompanyNumber = Math.floor(Math.random() * 1000);
 

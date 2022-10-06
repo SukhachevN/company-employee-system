@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { v4 as uuid } from 'uuid';
-import { Company, Employee } from './interfaces';
+import { ICompany, IEmployee } from './interfaces';
 
 const fakeJobsList = [
   'frontend',
@@ -15,7 +15,7 @@ const fakeJobsList = [
   'HR',
 ];
 
-export const createCompany = (): Company => {
+export const createCompany = (): ICompany => {
   const { county, cityName, streetAddress } = faker.address;
 
   return {
@@ -26,7 +26,7 @@ export const createCompany = (): Company => {
   };
 };
 
-export const createEmployee = (companyId: string): Employee => {
+export const createEmployee = (companyId: string): IEmployee => {
   const { firstName, lastName } = faker.name;
   const position = faker.helpers.arrayElement(fakeJobsList);
 

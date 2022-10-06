@@ -1,11 +1,11 @@
-export interface Company {
+export interface ICompany {
   id: string;
   title: string;
   employees: number;
   address: string;
 }
 
-export interface Employee {
+export interface IEmployee {
   id: string;
   firstName: string;
   lastName: string;
