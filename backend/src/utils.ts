@@ -1,7 +1,7 @@
 import { createCompany, createEmployee } from './fakerFunctions';
 import { ICompany, IEmployee } from './interfaces';
 
-export const limit = 20;
+export const limit = 50;
 
 export const createStartData = () => {
   const companies: ICompany[] = [];

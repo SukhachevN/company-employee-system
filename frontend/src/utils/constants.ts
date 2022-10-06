@@ -7,9 +7,11 @@ export const employeesRoute = '/employees';
 export const getDefaultEmptyState = <T>(): IDefaultState<T> => ({
   entities: [],
   currentEntity: null,
-  isLoading: true,
+  isLoading: false,
+  isUpdating: false,
   page: 1,
   selected: {},
   endOfData: false,
-  error: null,
+  entitiesError: null,
+  currentEntityError: null,
 });

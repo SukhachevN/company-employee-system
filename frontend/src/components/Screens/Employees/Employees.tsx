@@ -1,7 +1,8 @@
 import { memo } from 'react';
+import { Table } from '../../UI/Table';
 
 const Employees = memo(() => {
-  return <div>Employees</div>;
+  return <Table />;
 });
 
 export { Employees };

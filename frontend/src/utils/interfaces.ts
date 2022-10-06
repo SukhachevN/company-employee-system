@@ -1,4 +1,5 @@
 import { AsyncThunk } from '@reduxjs/toolkit';
+import React from 'react';
 
 export interface ICompany {
   id: string;
@@ -16,13 +17,15 @@ export interface IEmployee {
 }
 
 export interface IDefaultState<T> {
-  currentEntity: (T & { isUpdating?: boolean }) | null;
+  currentEntity: T | null;
   isLoading: boolean;
+  isUpdating: boolean;
   entities: T[];
   page: number;
   endOfData: boolean;
   selected: Record<string, boolean>;
-  error: string | null;
+  entitiesError: string | null;
+  currentEntityError: string | null;
 }
 
 export interface fetchParams {
@@ -38,9 +41,18 @@ export interface GetPayload<T> {
   results: T[];
 }
 
-export interface IExtraReducers<T> {
+export interface IExtraReducers<T extends { id: string }> {
   get?: AsyncThunk<GetPayload<T>, void, {}>;
-  post?: AsyncThunk<any, any, {}>;
-  put?: AsyncThunk<any, any, {}>;
-  remove?: AsyncThunk<any, any, {}>;
+  post?: AsyncThunk<T, Omit<T, 'id'>, {}>;
+  put?: AsyncThunk<T, T, {}>;
+  remove?: AsyncThunk<string[], string[], {}>;
+}
+
+export type NotCreatedCompany = Omit<ICompany, 'id'>;
+
+export type NotCreatedEmployee = Omit<IEmployee, 'id'>;
+
+export interface ITableConfigValue {
+  fieldName: string;
+  styles: React.CSSProperties;
 }

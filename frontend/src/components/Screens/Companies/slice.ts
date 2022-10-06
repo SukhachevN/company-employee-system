@@ -5,28 +5,50 @@ import {
   companiesRoute,
   getDefaultEmptyState,
 } from '../../../utils/constants';
-import { ICompany, IExtraReducers } from '../../../utils/interfaces';
-import { getResponse, setExtraReducers } from '../../../utils/utils';
+import {
+  ICompany,
+  IExtraReducers,
+  NotCreatedCompany,
+} from '../../../utils/interfaces';
+import {
+  createDeleteThunk,
+  createFetchThunk,
+  createPostThunk,
+  createPutThunk,
+  getResponse,
+  setExtraReducers,
+} from '../../../utils/utils';
+
+const url = `${baseUrl}${companiesRoute}`;
 
 const initialState = getDefaultEmptyState<ICompany>();
 
 export const fetchCompanies = createAsyncThunk(
   'fetchCompanies',
-  async (_, { getState }) => {
-    const {
-      companies: { page, entities },
-    } = getState() as RootState;
+  async (_, { getState }) =>
+    createFetchThunk('companies', getState() as RootState, url)
+);
 
-    const currentPage = !entities.length ? 1 : page + 1;
+export const postCompany = createAsyncThunk(
+  'postCompany',
+  async (company: NotCreatedCompany) => createPostThunk(company, url)
+);
 
-    const link = `${baseUrl}${companiesRoute}?page=${currentPage}`;
+export const updateCompany = createAsyncThunk(
+  'updateCompany',
+  async (company: ICompany) => createPutThunk(company, url)
+);
 
-    return await getResponse({ link });
-  }
+export const deleteCompanies = createAsyncThunk(
+  'deleteCompanies',
+  async (companyIds: string[]) => createDeleteThunk(companyIds, url)
 );
 
 const extraReducers: IExtraReducers<ICompany> = {
   get: fetchCompanies,
+  post: postCompany,
+  put: updateCompany,
+  remove: deleteCompanies,
 };
 
 export const companiesSlice = createSlice({
