@@ -5,8 +5,8 @@ import {
   companiesRoute,
   getDefaultEmptyState,
 } from '../../../utils/constants';
-import { ICompany } from '../../../utils/interfaces';
-import { getResponse } from '../../../utils/utils';
+import { ICompany, IExtraReducers } from '../../../utils/interfaces';
+import { getResponse, setExtraReducers } from '../../../utils/utils';
 
 const initialState = getDefaultEmptyState<ICompany>();
 
@@ -25,11 +25,17 @@ export const fetchCompanies = createAsyncThunk(
   }
 );
 
+const extraReducers: IExtraReducers<ICompany> = {
+  get: fetchCompanies,
+};
+
 export const companiesSlice = createSlice({
   name: 'companies',
   initialState,
   reducers: {},
-  extraReducers: (builder) => {},
+  extraReducers: (builder) => {
+    setExtraReducers<ICompany>(builder, extraReducers);
+  },
 });
 
 export const { reducer: companiesReducer } = companiesSlice;

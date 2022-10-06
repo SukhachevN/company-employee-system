@@ -11,4 +11,5 @@ export const getDefaultEmptyState = <T>(): IDefaultState<T> => ({
   page: 1,
   selected: {},
   endOfData: false,
+  error: null,
 });

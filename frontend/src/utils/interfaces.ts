@@ -16,12 +16,13 @@ export interface IEmployee {
 }
 
 export interface IDefaultState<T> {
-  currentEntity: T | null;
+  currentEntity: (T & { isUpdating?: boolean }) | null;
   isLoading: boolean;
   entities: T[];
   page: number;
   endOfData: boolean;
   selected: Record<string, boolean>;
+  error: string | null;
 }
 
 export interface fetchParams {
@@ -32,9 +33,14 @@ export interface fetchParams {
   };
 }
 
-export interface IExtraReducers {
-  get?: AsyncThunk<any, any, {}>;
+export interface GetPayload<T> {
+  endOfData: boolean;
+  results: T[];
+}
+
+export interface IExtraReducers<T> {
+  get?: AsyncThunk<GetPayload<T>, void, {}>;
   post?: AsyncThunk<any, any, {}>;
   put?: AsyncThunk<any, any, {}>;
-  delete?: AsyncThunk<any, any, {}>;
+  remove?: AsyncThunk<any, any, {}>;
 }
