@@ -12,3 +12,6 @@ export interface IEmployee {
   position: string;
   companyId: string;
 }
+
+export type INotCreatedCompany = Omit<ICompany, 'id'>;
+export type INotCreatedEmployee = Omit<IEmployee, 'id'>;

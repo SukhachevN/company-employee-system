@@ -4,7 +4,12 @@ import { RootState } from '../App/store';
 import { fetchParams, IDefaultState, IExtraReducers } from './interfaces';
 
 export const getResponse = async ({ link, options }: fetchParams) => {
-  const response = await fetch(link, options);
+  const response = await fetch(link, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...options,
+  });
   const result = await response.json();
 
   return result;
@@ -121,12 +126,9 @@ export const createPostThunk = async <T>(entity: T, url: string) => {
   return await getResponse(params);
 };
 
-export const createPutThunk = async <T extends { id: string }>(
-  entity: T,
-  url: string
-) => {
+export const createPutThunk = async <T>(entity: T, url: string) => {
   const params: fetchParams = {
-    link: `${url}/${entity.id}`,
+    link: url,
     options: {
       method: 'PUT',
       body: JSON.stringify(entity),
