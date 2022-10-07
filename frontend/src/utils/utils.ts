@@ -1,7 +1,14 @@
-import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
+import { ActionReducerMapBuilder, PayloadAction } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
+
 import { RootState } from '../App/store';
-import { fetchParams, IDefaultState, IExtraReducers } from './interfaces';
+import {
+  ButtonTypes,
+  fetchParams,
+  IDefaultState,
+  IExtraReducers,
+  ISetSelectedPayload,
+} from './interfaces';
 
 export const getResponse = async ({ link, options }: fetchParams) => {
   const response = await fetch(link, {
@@ -30,7 +37,7 @@ export const setExtraReducers = <T extends { id: string }>(
       const { results, endOfData } = action.payload;
 
       state.isLoading = false;
-      (state as IDefaultState<T>).entities.push(...results);
+      (state as IDefaultState<T>).entities.push(...results.reverse());
       state.endOfData = endOfData;
       state.entitiesError = null;
 
@@ -107,7 +114,7 @@ export const createFetchThunk = async (
 ) => {
   const { page, entities } = state[key];
 
-  const currentPage = !entities.length ? 1 : page + 1;
+  const currentPage = !entities.length ? 1 : page;
 
   const link = `${url}?page=${currentPage}`;
 
@@ -167,3 +174,33 @@ export const useIsVisible = (ref: React.RefObject<HTMLDivElement>) => {
 
   return isIntersecting;
 };
+
+export const setSelected = <T extends { id: string }>(
+  state: IDefaultState<T>,
+  action: PayloadAction<ISetSelectedPayload>
+) => {
+  const { id, setAllTo } = action.payload;
+
+  if (typeof setAllTo === 'undefined') {
+    state.selected[id]
+      ? delete state.selected[id]
+      : (state.selected[id] = true);
+
+    return;
+  }
+
+  if (!setAllTo) {
+    state.selected = {};
+  } else {
+    state.entities.forEach(({ id }) => (state.selected[id] = true));
+  }
+};
+
+type CNArgs = string | Record<string, boolean>;
+
+export const cn = (...args: CNArgs[]) =>
+  args
+    .map((arg) =>
+      typeof arg === 'string' ? arg : Object.keys(arg).filter((key) => arg[key])
+    )
+    .join(' ');

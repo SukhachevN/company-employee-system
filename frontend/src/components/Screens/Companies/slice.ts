@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../../App/store';
 import {
   baseUrl,
@@ -15,8 +15,8 @@ import {
   createFetchThunk,
   createPostThunk,
   createPutThunk,
-  getResponse,
   setExtraReducers,
+  setSelected,
 } from '../../../utils/utils';
 
 const url = `${baseUrl}${companiesRoute}`;
@@ -54,10 +54,14 @@ const extraReducers: IExtraReducers<ICompany> = {
 export const companiesSlice = createSlice({
   name: 'companies',
   initialState,
-  reducers: {},
+  reducers: {
+    setSelectedCompanies: setSelected,
+  },
   extraReducers: (builder) => {
     setExtraReducers<ICompany>(builder, extraReducers);
   },
 });
 
 export const { reducer: companiesReducer } = companiesSlice;
+
+export const { setSelectedCompanies } = companiesSlice.actions;
