@@ -11,6 +11,8 @@ import {
 
 let { companies, employees } = createStartData();
 
+const comaniesList: Record<string, boolean> = {};
+
 const app = express();
 
 app.use(cors());
@@ -25,7 +27,7 @@ app.get('/companies', (req, res) => {
 
   const realPage = page ? +page : 0;
 
-  const result = getPaginatedResult(realPage, companies.reverse());
+  const result = getPaginatedResult(realPage, companies);
 
   res.json(result);
 });
@@ -37,7 +39,7 @@ app.get('/employees', (req, res) => {
 
   const realPage = page ? +page : 0;
 
-  const result = getPaginatedResult(realPage, filtered.reverse());
+  const result = getPaginatedResult(realPage, filtered);
 
   res.json(result);
 });

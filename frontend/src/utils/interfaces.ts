@@ -56,3 +56,14 @@ export interface ITableConfigValue {
   fieldName: string;
   styles: React.CSSProperties;
 }
+
+export interface ISetSelectedPayload {
+  id: string;
+  setAllTo?: boolean;
+}
+
+export type ButtonTypes = 'EDIT' | 'REMOVE' | 'ADD_EMPLOYEE';
+
+export type ClickHandler = (id: string) => void;
+
+export type ButtonHandlers = Partial<Record<ButtonTypes, ClickHandler>>;

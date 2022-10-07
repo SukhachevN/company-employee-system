@@ -4,7 +4,7 @@ import './styles.scss';
 
 const App = () => {
   return (
-    <main>
+    <main className='container'>
       <Companies />
     </main>
   );

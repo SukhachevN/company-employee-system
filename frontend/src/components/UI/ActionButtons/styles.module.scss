@@ -1,0 +1,22 @@
+@import '../../../utils/constants.scss';
+
+.container {
+  display: flex;
+  gap: toRem(5px);
+
+  &__button {
+    @include cleanButton;
+    svg {
+      width: toRem(16px);
+      height: toRem(16px);
+    }
+
+    &:hover {
+      svg {
+        path {
+          fill: $gray;
+        }
+      }
+    }
+  }
+}
