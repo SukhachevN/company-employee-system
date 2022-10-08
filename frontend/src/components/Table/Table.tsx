@@ -1,10 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import {
-  ButtonHandlers,
-  ButtonTypes,
-  ITableConfigValue,
-} from '../../../utils/interfaces';
-import { cn, useIsVisible } from '../../../utils/utils';
+import { useEffect, useRef } from 'react';
+import { ButtonHandlers, ITableConfigValue } from '../../utils/interfaces';
+import { cn, useIsVisible } from '../../utils/utils';
 import { ActionButtons } from '../ActionButtons';
 import { Spinner } from '../Spinner';
 

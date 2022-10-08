@@ -1,10 +1,10 @@
-import { memo, useCallback, useMemo } from 'react';
-import { useAppDispatch } from '../../../App/hooks';
-import { useCompanies } from '../../../utils/selectors';
-import { Table } from '../../UI/Table';
+import { memo, useMemo } from 'react';
+import { useAppDispatch } from '../../App/hooks';
+import { useCompanies } from '../../utils/selectors';
+import { Table } from '../Table';
 import { deleteCompanies, fetchCompanies, setSelectedCompanies } from './slice';
 import { tableConfig } from './tableConfig';
-import { ButtonHandlers } from '../../../utils/interfaces';
+import { ButtonHandlers } from '../../utils/interfaces';
 
 const Companies = memo(() => {
   const dispatch = useAppDispatch();

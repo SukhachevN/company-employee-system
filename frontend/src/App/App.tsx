@@ -1,5 +1,5 @@
-import { Companies } from '../components/Screens/Companies';
-import { Employees } from '../components/Screens/Employees';
+import { Companies } from '../components/Companies';
+import { Employees } from '../components/Employees';
 import { haveSelected } from '../utils/selectors';
 import { useAppSelector } from './hooks';
 

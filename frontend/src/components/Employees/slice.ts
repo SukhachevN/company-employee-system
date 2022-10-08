@@ -1,25 +1,24 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../../../App/store';
+import { RootState } from '../../App/store';
 import {
   baseUrl,
   employeesRoute,
   getDefaultEmptyState,
-} from '../../../utils/constants';
+} from '../../utils/constants';
 import {
   fetchParams,
   IEmployee,
   IExtraReducers,
   NotCreatedEmployee,
-} from '../../../utils/interfaces';
+} from '../../utils/interfaces';
 import {
   createDeleteThunk,
   createFetchThunk,
   createPostThunk,
   createPutThunk,
-  getResponse,
   setExtraReducers,
   setSelected,
-} from '../../../utils/utils';
+} from '../../utils/utils';
 import { setEmployeesCountForUodate } from '../Companies/slice';
 
 const initialState = getDefaultEmptyState<IEmployee>();

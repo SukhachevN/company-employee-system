@@ -1,9 +1,4 @@
-import {
-  IEmployeeForTable,
-  ITableConfigValue,
-  NotCreatedCompany,
-  NotCreatedEmployee,
-} from '../../../utils/interfaces';
+import { IEmployeeForTable, ITableConfigValue } from '../../utils/interfaces';
 
 export const tableConfig: Record<keyof IEmployeeForTable, ITableConfigValue> = {
   fullName: {

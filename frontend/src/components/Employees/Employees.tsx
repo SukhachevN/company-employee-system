@@ -1,12 +1,12 @@
 import { memo, useEffect, useMemo } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../App/hooks';
-import { ButtonHandlers } from '../../../utils/interfaces';
+import { useAppDispatch, useAppSelector } from '../../App/hooks';
+import { ButtonHandlers } from '../../utils/interfaces';
 import {
   haveSelected,
   queryForEmployees,
   useEmployees,
-} from '../../../utils/selectors';
-import { Table } from '../../UI/Table';
+} from '../../utils/selectors';
+import { Table } from '../Table';
 import { deleteEmployees, fetchEmployees, setSelectedEmployees } from './slice';
 import { tableConfig } from './tableConfig';
 

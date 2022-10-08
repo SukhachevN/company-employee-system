@@ -1,16 +1,16 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../../../App/store';
+import { RootState } from '../../App/store';
 import {
   baseUrl,
   companiesRoute,
   getDefaultEmptyState,
-} from '../../../utils/constants';
+} from '../../utils/constants';
 import {
   ICompany,
   IDefaultState,
   IExtraReducers,
   NotCreatedCompany,
-} from '../../../utils/interfaces';
+} from '../../utils/interfaces';
 import {
   createDeleteThunk,
   createFetchThunk,
@@ -18,7 +18,7 @@ import {
   createPutThunk,
   setExtraReducers,
   setSelected,
-} from '../../../utils/utils';
+} from '../../utils/utils';
 import { deleteEmployees } from '../Employees/slice';
 
 const url = `${baseUrl}${companiesRoute}`;
