@@ -19,7 +19,11 @@ const ActionButtons: React.FC<ActionButtonsProps> = memo(
           <button
             className={styles.container__button}
             key={key}
-            onClick={() => buttonsHandlers[key]?.(id)}
+            onClick={() =>
+              key === 'REMOVE'
+                ? buttonsHandlers[key]?.([id])
+                : buttonsHandlers[key]?.(id)
+            }
           >
             {iconByKey[key]}
           </button>

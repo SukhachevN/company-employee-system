@@ -99,9 +99,12 @@ export const setExtraReducers = <T extends { id: string }>(
 
   if (remove) {
     builder.addCase(remove.fulfilled, (state, action) => {
-      state.entities = state.entities.filter(
-        ({ id }) => !action.payload.includes(id)
-      );
+      state.entities = state.entities.filter(({ id }) => {
+        const condition = !action.payload.includes(id);
+        !condition && delete state.selected[id];
+
+        return condition;
+      });
 
       state.entitiesError = null;
     });

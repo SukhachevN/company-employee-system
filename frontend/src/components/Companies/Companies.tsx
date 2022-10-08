@@ -32,7 +32,8 @@ const Companies = memo(() => {
         dispatch(setFormType('employee'));
         dispatch(setEmployeesCompany(id));
       },
-      REMOVE: (id: string) => dispatch(deleteCompanies([id])),
+      REMOVE: (ids: string | string[]) =>
+        dispatch(deleteCompanies(Array.from(ids))),
     }),
     []
   );
