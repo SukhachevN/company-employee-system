@@ -16,7 +16,7 @@ export const tableConfig: Record<keyof NotCreatedCompany, ITableConfigValue> = {
   employees: {
     fieldName: 'Кол-во сотрудников',
     styles: {
-      width: '30%',
+      width: '15%',
     },
   },
 };

@@ -69,8 +69,13 @@ export interface ISetSelectedPayload {
 export type ButtonTypes = 'EDIT' | 'REMOVE' | 'ADD_EMPLOYEE';
 
 export type ClickHandler = (id: string) => void;
+export type ClickHandlerForMultiple = (ids: string[]) => void;
 
-export type ButtonHandlers = Partial<Record<ButtonTypes, ClickHandler>>;
+export type ButtonHandlers = Partial<{
+  EDIT: ClickHandler;
+  REMOVE: ClickHandlerForMultiple;
+  ADD_EMPLOYEE: ClickHandler;
+}>;
 
 export interface IEmployeeForTable {
   fullName: string;

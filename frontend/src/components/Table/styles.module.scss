@@ -1,7 +1,27 @@
 @import '../../utils/constants.scss';
 
+.container {
+  display: flex;
+  gap: toRem(10px);
+  flex-direction: column;
+
+  .deleteButton {
+    background: $red;
+    color: white;
+    cursor: pointer;
+    width: fit-content;
+
+    &_disabled {
+      color: $black;
+      background: $lightGray;
+      cursor: not-allowed;
+    }
+  }
+}
+
 .table {
   height: 100%;
+  width: 100%;
   overflow-y: auto;
   border: 1px solid $black;
 
