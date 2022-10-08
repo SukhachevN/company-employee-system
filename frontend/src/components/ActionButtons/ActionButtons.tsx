@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { ButtonHandlers, ButtonTypes } from '../../../utils/interfaces';
+import { ButtonHandlers, ButtonTypes } from '../../utils/interfaces';
 import { iconByKey } from './icons';
 
 import styles from './styles.module.scss';

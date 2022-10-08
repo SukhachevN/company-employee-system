@@ -1,7 +1,4 @@
-import {
-  ITableConfigValue,
-  NotCreatedCompany,
-} from '../../../utils/interfaces';
+import { ITableConfigValue, NotCreatedCompany } from '../../utils/interfaces';
 
 export const tableConfig: Record<keyof NotCreatedCompany, ITableConfigValue> = {
   title: {

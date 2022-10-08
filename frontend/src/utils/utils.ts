@@ -3,7 +3,10 @@ import { useEffect, useState } from 'react';
 
 import { RootState } from '../App/store';
 import {
+  CompanyEntity,
+  EmployeeEntity,
   fetchParams,
+  ICompany,
   IDefaultState,
   IExtraReducers,
   ISetSelectedPayload,
@@ -39,10 +42,10 @@ export const setExtraReducers = <T extends { id: string }>(
       state.isLoading = false;
       if (arg && arg !== state.lastSearch) {
         state.lastSearch = arg;
-        (state as IDefaultState<T>).entities = results.reverse();
+        (state as IDefaultState<T>).entities = results;
         state.page = 1;
       } else {
-        (state as IDefaultState<T>).entities.push(...results.reverse());
+        (state as IDefaultState<T>).entities.push(...results);
       }
       state.endOfData = endOfData;
       state.entitiesError = null;
@@ -60,36 +63,36 @@ export const setExtraReducers = <T extends { id: string }>(
 
   if (post) {
     builder.addCase(post.pending, (state) => {
-      state.isUpdating = true;
+      state.isEntityUpdating = true;
     });
 
     builder.addCase(post.fulfilled, (state, action) => {
-      state.isUpdating = false;
       (state.currentEntity as T) = action.payload;
-      state.currentEntityError;
+      state.isEntityUpdating = false;
+      (state.entities as T[]) = [action.payload, ...state.entities] as T[];
     });
 
     builder.addCase(post.rejected, (state, action) => {
-      state.isUpdating = false;
-      state.currentEntity = null;
+      state.isEntityUpdating = false;
       state.currentEntityError = action.error.message as string;
     });
   }
 
   if (put) {
-    builder.addCase(put.pending, (state) => {
-      state.isUpdating = true;
+    builder.addCase(put.pending, (state, action) => {
+      state.isEntityUpdating = true;
     });
 
     builder.addCase(put.fulfilled, (state, action) => {
-      state.isUpdating = false;
       (state.currentEntity as T) = action.payload;
-      state.currentEntityError;
+      state.isEntityUpdating = false;
+      (state.entities as T[]) = state.entities.map((entity) =>
+        entity.id === action.payload.id ? action.payload : entity
+      ) as T[];
     });
 
     builder.addCase(put.rejected, (state, action) => {
-      state.isUpdating = false;
-      state.currentEntity = null;
+      state.isEntityUpdating = false;
       state.currentEntityError = action.error.message as string;
     });
   }
@@ -100,11 +103,7 @@ export const setExtraReducers = <T extends { id: string }>(
         ({ id }) => !action.payload.includes(id)
       );
 
-      if (!action.payload.includes(state.currentEntity?.id as string))
-        state.currentEntity = null;
-
       state.entitiesError = null;
-      state.currentEntityError = null;
     });
 
     builder.addCase(remove.rejected, (state, action) => {
@@ -114,7 +113,7 @@ export const setExtraReducers = <T extends { id: string }>(
 };
 
 export const createFetchThunk = async (
-  key: keyof RootState,
+  key: 'companies' | 'employees',
   state: RootState,
   url: string,
   searchQuery?: string
@@ -211,3 +210,12 @@ export const cn = (...args: CNArgs[]) =>
       typeof arg === 'string' ? arg : Object.keys(arg).filter((key) => arg[key])
     )
     .join(' ');
+
+export const setCurrentEntity = <T extends { id: string }>(
+  state: IDefaultState<T>,
+  action: PayloadAction<string>
+) => {
+  state.currentEntity = state.entities.find(
+    ({ id }) => id === action.payload
+  ) as unknown as T extends ICompany ? CompanyEntity : EmployeeEntity;
+};

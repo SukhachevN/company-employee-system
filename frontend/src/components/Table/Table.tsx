@@ -1,10 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import {
-  ButtonHandlers,
-  ButtonTypes,
-  ITableConfigValue,
-} from '../../../utils/interfaces';
-import { cn, useIsVisible } from '../../../utils/utils';
+import { useEffect, useRef } from 'react';
+import { ButtonHandlers, ITableConfigValue } from '../../utils/interfaces';
+import { cn, useIsVisible } from '../../utils/utils';
 import { ActionButtons } from '../ActionButtons';
 import { Spinner } from '../Spinner';
 
@@ -19,6 +15,7 @@ interface TableProps<T extends { id: string }> {
   isLoading: boolean;
   emptyText?: string;
   buttonHandlers?: ButtonHandlers;
+  error: string | null;
 }
 
 function Table<T extends { id: string }>({
@@ -30,6 +27,7 @@ function Table<T extends { id: string }>({
   isLoading,
   emptyText = 'Нет данных',
   buttonHandlers,
+  error,
 }: TableProps<T>) {
   const keys = Object.keys(tableConfig);
   type KeysWithoutId = keyof Omit<T, 'id'>;
@@ -69,6 +67,9 @@ function Table<T extends { id: string }>({
         </tr>
       </thead>
       <tbody className={styles.table__body}>
+        <tr className={`${styles.table__error} error`}>
+          <td>{error}</td>
+        </tr>
         {entities.map((entity) => (
           <tr
             key={entity.id}

@@ -1,28 +1,30 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../../../App/store';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../../App/store';
 import {
   baseUrl,
   employeesRoute,
   getDefaultEmptyState,
-} from '../../../utils/constants';
+} from '../../utils/constants';
 import {
-  fetchParams,
   IEmployee,
   IExtraReducers,
   NotCreatedEmployee,
-} from '../../../utils/interfaces';
+} from '../../utils/interfaces';
 import {
   createDeleteThunk,
   createFetchThunk,
   createPostThunk,
   createPutThunk,
-  getResponse,
+  setCurrentEntity,
   setExtraReducers,
   setSelected,
-} from '../../../utils/utils';
+} from '../../utils/utils';
 import { setEmployeesCountForUodate } from '../Companies/slice';
 
-const initialState = getDefaultEmptyState<IEmployee>();
+const initialState = {
+  ...getDefaultEmptyState<IEmployee>(),
+  currentEntity: { companyId: '' },
+};
 
 const url = `${baseUrl}${employeesRoute}`;
 
@@ -77,7 +79,11 @@ export const employeesSlice = createSlice({
   name: 'employees',
   initialState,
   reducers: {
+    setEmployee: setCurrentEntity,
     setSelectedEmployees: setSelected,
+    setEmployeesCompany: (state, action: PayloadAction<string>) => {
+      state.currentEntity = { companyId: action.payload };
+    },
   },
   extraReducers: (builder) => {
     setExtraReducers<IEmployee>(builder, extraReducers);
@@ -86,4 +92,5 @@ export const employeesSlice = createSlice({
 
 export const { reducer: employeesReducer } = employeesSlice;
 
-export const { setSelectedEmployees } = employeesSlice.actions;
+export const { setSelectedEmployees, setEmployee, setEmployeesCompany } =
+  employeesSlice.actions;
