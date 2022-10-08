@@ -6,14 +6,20 @@ import {
   queryForEmployees,
   useEmployees,
 } from '../../utils/selectors';
+import { setFormType } from '../EditForm/slice';
 import { Table } from '../Table';
-import { deleteEmployees, fetchEmployees, setSelectedEmployees } from './slice';
+import {
+  deleteEmployees,
+  fetchEmployees,
+  setEmployee,
+  setSelectedEmployees,
+} from './slice';
 import { tableConfig } from './tableConfig';
 
 const Employees = memo(() => {
   const dispatch = useAppDispatch();
 
-  const { entities, endOfData, isLoading, selected, lastSearch } =
+  const { entities, endOfData, isLoading, selected, entitiesError } =
     useEmployees();
 
   const haveSelectedCompany = useAppSelector(haveSelected);
@@ -28,7 +34,10 @@ const Employees = memo(() => {
 
   const buttonHandlers: ButtonHandlers = useMemo(
     () => ({
-      EDIT: (id: string) => console.log('TODO'),
+      EDIT: (id: string) => {
+        dispatch(setFormType('employee'));
+        dispatch(setEmployee(id));
+      },
       REMOVE: (id: string) => dispatch(deleteEmployees([id])),
     }),
     []
@@ -50,6 +59,7 @@ const Employees = memo(() => {
 
   return (
     <Table
+      error={entitiesError}
       entities={performedEntities}
       onClick={(id, setAllTo) =>
         dispatch(setSelectedEmployees({ id, setAllTo }))

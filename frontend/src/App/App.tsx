@@ -1,4 +1,5 @@
 import { Companies } from '../components/Companies';
+import { EditForm } from '../components/EditForm';
 import { Employees } from '../components/Employees';
 import { haveSelected } from '../utils/selectors';
 import { useAppSelector } from './hooks';
@@ -10,8 +11,11 @@ const App = () => {
 
   return (
     <main className='container'>
-      <Companies />
-      {showEmployees && <Employees />}
+      <EditForm />
+      <div className='tables'>
+        <Companies />
+        {showEmployees && <Employees />}
+      </div>
     </main>
   );
 };

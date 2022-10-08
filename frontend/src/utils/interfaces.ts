@@ -16,17 +16,20 @@ export interface IEmployee {
   companyId: string;
 }
 
+export type CompanyEntity = ICompany | { employees: number };
+export type EmployeeEntity = IEmployee | { companyId: string };
+
 export interface IDefaultState<T> {
-  currentEntity: T | null;
+  currentEntity: T extends ICompany ? CompanyEntity : EmployeeEntity;
   isLoading: boolean;
-  isUpdating: boolean;
   entities: T[];
   page: number;
   endOfData: boolean;
   selected: Record<string, boolean>;
   entitiesError: string | null;
-  currentEntityError: string | null;
   lastSearch?: string | undefined;
+  isEntityUpdating: boolean;
+  currentEntityError: string | null;
 }
 
 export interface fetchParams {

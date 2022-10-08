@@ -48,7 +48,7 @@ app.get('/employees', (req, res) => {
 
 app.post('/companies', (req: Request<{}, {}, INotCreatedCompany>, res) => {
   const company = { ...req.body, id: uuid() };
-  companies.push(company);
+  companies = [company, ...companies];
   res.json(company);
 });
 
@@ -71,8 +71,9 @@ app.post('/employees', (req: Request<{}, {}, INotCreatedEmployee>, res) => {
 
 app.put('/companies', (req: Request<{}, {}, ICompany>, res) => {
   const company = req.body;
-  const index = employees.findIndex(({ id }) => id === company.id);
-  if (~index) {
+  const index = companies.findIndex(({ id }) => id === company.id);
+
+  if (!~index) {
     res.status(400).send('Компания была удалена, либо не существовала');
   } else {
     companies[index] = company;
@@ -83,7 +84,8 @@ app.put('/companies', (req: Request<{}, {}, ICompany>, res) => {
 app.put('/employees', (req: Request<{}, {}, IEmployee>, res) => {
   const employee = req.body;
   const index = employees.findIndex(({ id }) => id === employee.id);
-  if (~index) {
+
+  if (!~index) {
     res.status(400).send('Сотрудник был удалён, либо не существовал');
   } else {
     employees[index] = employee;

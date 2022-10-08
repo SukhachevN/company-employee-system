@@ -1,7 +1,7 @@
-@import '../../../utils/constants.scss';
+@import '../../utils/constants.scss';
 
 .table {
-  height: 80%;
+  height: 100%;
   overflow-y: auto;
   border: 1px solid $black;
 
@@ -54,8 +54,13 @@
   &__last {
     height: toRem(1px);
   }
+
+  &__error {
+    @include center;
+  }
 }
 
 .checkbox {
   width: 10%;
+  cursor: pointer;
 }

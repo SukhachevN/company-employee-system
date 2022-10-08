@@ -10,16 +10,18 @@ import {
   IDefaultState,
   IExtraReducers,
   NotCreatedCompany,
+  NotCreatedEmployee,
 } from '../../utils/interfaces';
 import {
   createDeleteThunk,
   createFetchThunk,
   createPostThunk,
   createPutThunk,
+  setCurrentEntity,
   setExtraReducers,
   setSelected,
 } from '../../utils/utils';
-import { deleteEmployees } from '../Employees/slice';
+import { deleteEmployees, postEmployee } from '../Employees/slice';
 
 const url = `${baseUrl}${companiesRoute}`;
 
@@ -28,6 +30,9 @@ const initialState: IDefaultState<ICompany> & {
 } = {
   ...getDefaultEmptyState<ICompany>(),
   employeesCountUpdate: {},
+  currentEntity: {
+    employees: 0,
+  },
 };
 
 export const fetchCompanies = createAsyncThunk(
@@ -62,12 +67,16 @@ export const companiesSlice = createSlice({
   name: 'companies',
   initialState,
   reducers: {
+    setCompany: setCurrentEntity,
     setSelectedCompanies: setSelected,
     setEmployeesCountForUodate: (
       state,
       action: PayloadAction<Record<string, number>>
     ) => {
       state.employeesCountUpdate = action.payload;
+    },
+    setNewCompany: (state) => {
+      state.currentEntity = { employees: 0 };
     },
   },
   extraReducers: (builder) => {
@@ -91,10 +100,25 @@ export const companiesSlice = createSlice({
     builder.addCase(deleteEmployees.rejected, (state) => {
       state.employeesCountUpdate = {};
     });
+
+    builder.addCase(
+      postEmployee.fulfilled,
+      (state, action: PayloadAction<NotCreatedEmployee>) => {
+        const company = state.entities.find(
+          ({ id }) => id === action.payload.companyId
+        );
+
+        company!!.employees++;
+      }
+    );
   },
 });
 
 export const { reducer: companiesReducer } = companiesSlice;
 
-export const { setSelectedCompanies, setEmployeesCountForUodate } =
-  companiesSlice.actions;
+export const {
+  setSelectedCompanies,
+  setEmployeesCountForUodate,
+  setCompany,
+  setNewCompany,
+} = companiesSlice.actions;
