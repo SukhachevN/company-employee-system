@@ -7,7 +7,7 @@ export const createStartData = () => {
   const companies: ICompany[] = [];
   const employees: IEmployee[] = [];
 
-  const randomCompanyNumber = Math.floor(100 + Math.random() * 1000);
+  const randomCompanyNumber = Math.floor(100 + Math.random() * 100);
 
   for (let i = 0; i < randomCompanyNumber; i++) {
     const company = createCompany();

@@ -11,4 +11,8 @@
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  padding: toRem(50px);
+  display: flex;
+  justify-content: center;
+  gap: toRem(20px);
 }

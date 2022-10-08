@@ -18,7 +18,9 @@ import {
   createPutThunk,
   getResponse,
   setExtraReducers,
+  setSelected,
 } from '../../../utils/utils';
+import { setEmployeesCountForUodate } from '../Companies/slice';
 
 const initialState = getDefaultEmptyState<IEmployee>();
 
@@ -26,8 +28,8 @@ const url = `${baseUrl}${employeesRoute}`;
 
 export const fetchEmployees = createAsyncThunk(
   'fetchEmployees',
-  async (_, { getState }) =>
-    createFetchThunk('employees', getState() as RootState, url)
+  async (searchQuery: string | undefined, { getState }) =>
+    createFetchThunk('employees', getState() as RootState, url, searchQuery)
 );
 
 export const postEmployee = createAsyncThunk(
@@ -42,7 +44,26 @@ export const updateEmployee = createAsyncThunk(
 
 export const deleteEmployees = createAsyncThunk(
   'deleteEmployees',
-  async (employeesIds: string[]) => createDeleteThunk(employeesIds, url)
+  async (employeesIds: string[], { getState, dispatch }) => {
+    const {
+      employees: { entities },
+    } = getState() as RootState;
+
+    const employeesCountForUpdate: Record<string, number> = {};
+
+    entities.forEach(({ companyId, id }) => {
+      if (employeesIds.includes(id)) {
+        !employeesCountForUpdate[companyId] &&
+          (employeesCountForUpdate[companyId] = 0);
+
+        employeesCountForUpdate[companyId]++;
+      }
+    });
+
+    dispatch(setEmployeesCountForUodate(employeesCountForUpdate));
+
+    return createDeleteThunk(employeesIds, url);
+  }
 );
 
 const extraReducers: IExtraReducers<IEmployee> = {
@@ -55,10 +76,14 @@ const extraReducers: IExtraReducers<IEmployee> = {
 export const employeesSlice = createSlice({
   name: 'employees',
   initialState,
-  reducers: {},
+  reducers: {
+    setSelectedEmployees: setSelected,
+  },
   extraReducers: (builder) => {
     setExtraReducers<IEmployee>(builder, extraReducers);
   },
 });
 
 export const { reducer: employeesReducer } = employeesSlice;
+
+export const { setSelectedEmployees } = employeesSlice.actions;

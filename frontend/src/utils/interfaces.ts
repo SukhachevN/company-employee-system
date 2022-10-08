@@ -26,6 +26,7 @@ export interface IDefaultState<T> {
   selected: Record<string, boolean>;
   entitiesError: string | null;
   currentEntityError: string | null;
+  lastSearch?: string | undefined;
 }
 
 export interface fetchParams {
@@ -42,7 +43,7 @@ export interface GetPayload<T> {
 }
 
 export interface IExtraReducers<T extends { id: string }> {
-  get?: AsyncThunk<GetPayload<T>, void, {}>;
+  get?: AsyncThunk<GetPayload<T>, string | undefined, {}>;
   post?: AsyncThunk<T, Omit<T, 'id'>, {}>;
   put?: AsyncThunk<T, T, {}>;
   remove?: AsyncThunk<string[], string[], {}>;
@@ -67,3 +68,8 @@ export type ButtonTypes = 'EDIT' | 'REMOVE' | 'ADD_EMPLOYEE';
 export type ClickHandler = (id: string) => void;
 
 export type ButtonHandlers = Partial<Record<ButtonTypes, ClickHandler>>;
+
+export interface IEmployeeForTable {
+  fullName: string;
+  position: string;
+}

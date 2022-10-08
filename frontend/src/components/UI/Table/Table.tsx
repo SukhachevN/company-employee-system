@@ -17,6 +17,7 @@ interface TableProps<T extends { id: string }> {
   onClick: (id: string, setAllTo?: boolean) => void;
   selected: Record<string, boolean>;
   isLoading: boolean;
+  emptyText?: string;
   buttonHandlers?: ButtonHandlers;
 }
 
@@ -27,6 +28,7 @@ function Table<T extends { id: string }>({
   onClick,
   selected,
   isLoading,
+  emptyText = 'Нет данных',
   buttonHandlers,
 }: TableProps<T>) {
   const keys = Object.keys(tableConfig);
@@ -37,6 +39,8 @@ function Table<T extends { id: string }>({
   const isEntitiesEnded = useIsVisible(endListRef);
 
   const isLoadingMore = entities.length && isLoading;
+
+  const isEmpty = !entities.length && !isLoading;
 
   useEffect(() => {
     isEntitiesEnded && fetchNext();
@@ -99,9 +103,13 @@ function Table<T extends { id: string }>({
           </tr>
         ))}
       </tbody>
-      <tfoot className={styles.table__footer}>
+      <tfoot
+        className={cn(styles.table__footer, {
+          [styles.table__footer_hidden]: isLoading || !isEmpty,
+        })}
+      >
         <tr className={`${styles.table__tr} ${styles.table__tr_forSpinner}`}>
-          <td>{isLoadingMore && <Spinner />}</td>
+          <td>{(isLoadingMore && <Spinner />) || (isEmpty && emptyText)}</td>
         </tr>
         <tr ref={endListRef} className={styles.table__last} />
       </tfoot>
