@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 
 import { RootState } from '../App/store';
 import {
-  ButtonTypes,
   fetchParams,
   IDefaultState,
   IExtraReducers,
@@ -35,9 +34,16 @@ export const setExtraReducers = <T extends { id: string }>(
 
     builder.addCase(get?.fulfilled, (state, action) => {
       const { results, endOfData } = action.payload;
+      const { arg } = action.meta;
 
       state.isLoading = false;
-      (state as IDefaultState<T>).entities.push(...results.reverse());
+      if (arg && arg !== state.lastSearch) {
+        state.lastSearch = arg;
+        (state as IDefaultState<T>).entities = results.reverse();
+        state.page = 1;
+      } else {
+        (state as IDefaultState<T>).entities.push(...results.reverse());
+      }
       state.endOfData = endOfData;
       state.entitiesError = null;
 
@@ -110,13 +116,14 @@ export const setExtraReducers = <T extends { id: string }>(
 export const createFetchThunk = async (
   key: keyof RootState,
   state: RootState,
-  url: string
+  url: string,
+  searchQuery?: string
 ) => {
-  const { page, entities } = state[key];
+  const { page, entities, lastSearch } = state[key];
 
-  const currentPage = !entities.length ? 1 : page;
+  const currentPage = !entities.length || lastSearch !== searchQuery ? 1 : page;
 
-  const link = `${url}?page=${currentPage}`;
+  const link = `${url}?page=${currentPage}${searchQuery || ''}`;
 
   return await getResponse({ link });
 };

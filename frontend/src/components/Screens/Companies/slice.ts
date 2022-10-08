@@ -7,6 +7,7 @@ import {
 } from '../../../utils/constants';
 import {
   ICompany,
+  IDefaultState,
   IExtraReducers,
   NotCreatedCompany,
 } from '../../../utils/interfaces';
@@ -18,15 +19,21 @@ import {
   setExtraReducers,
   setSelected,
 } from '../../../utils/utils';
+import { deleteEmployees } from '../Employees/slice';
 
 const url = `${baseUrl}${companiesRoute}`;
 
-const initialState = getDefaultEmptyState<ICompany>();
+const initialState: IDefaultState<ICompany> & {
+  employeesCountUpdate: Record<string, number>;
+} = {
+  ...getDefaultEmptyState<ICompany>(),
+  employeesCountUpdate: {},
+};
 
 export const fetchCompanies = createAsyncThunk(
   'fetchCompanies',
-  async (_, { getState }) =>
-    createFetchThunk('companies', getState() as RootState, url)
+  async (searchQuery: string | undefined, { getState }) =>
+    createFetchThunk('companies', getState() as RootState, url, searchQuery)
 );
 
 export const postCompany = createAsyncThunk(
@@ -56,12 +63,38 @@ export const companiesSlice = createSlice({
   initialState,
   reducers: {
     setSelectedCompanies: setSelected,
+    setEmployeesCountForUodate: (
+      state,
+      action: PayloadAction<Record<string, number>>
+    ) => {
+      state.employeesCountUpdate = action.payload;
+    },
   },
   extraReducers: (builder) => {
     setExtraReducers<ICompany>(builder, extraReducers);
+
+    builder.addCase(deleteEmployees.fulfilled, (state) => {
+      state.entities = state.entities.map((company) => {
+        const diff = state.employeesCountUpdate[company.id];
+
+        if (!diff) return company;
+
+        return {
+          ...company,
+          employees: company.employees - diff,
+        };
+      });
+
+      state.employeesCountUpdate = {};
+    });
+
+    builder.addCase(deleteEmployees.rejected, (state) => {
+      state.employeesCountUpdate = {};
+    });
   },
 });
 
 export const { reducer: companiesReducer } = companiesSlice;
 
-export const { setSelectedCompanies } = companiesSlice.actions;
+export const { setSelectedCompanies, setEmployeesCountForUodate } =
+  companiesSlice.actions;

@@ -11,8 +11,6 @@ import {
 
 let { companies, employees } = createStartData();
 
-const comaniesList: Record<string, boolean> = {};
-
 const app = express();
 
 app.use(cors());
@@ -35,7 +33,11 @@ app.get('/companies', (req, res) => {
 app.get('/employees', (req, res) => {
   const { companyId: company, page } = req.query;
 
-  const filtered = employees.filter(({ companyId }) => companyId === company);
+  const companiesArray = Array.isArray(company) ? company : [company];
+
+  const filtered = employees.filter(({ companyId }) =>
+    companiesArray.includes(companyId)
+  );
 
   const realPage = page ? +page : 0;
 
@@ -100,11 +102,13 @@ app.delete('/employees', (req: Request<{}, {}, string[]>, res) => {
   const ids = req.body;
   const removedFromCompany: Record<string, number> = {};
 
-  employees = employees.filter(({ companyId }) => {
-    const condition = !ids.includes(companyId);
+  employees = employees.filter(({ id, companyId }) => {
+    const condition = !ids.includes(id);
 
-    if (!removedFromCompany[companyId]) removedFromCompany[companyId] = 0;
-    removedFromCompany[companyId]++;
+    if (!condition) {
+      !removedFromCompany[companyId] && (removedFromCompany[companyId] = 0);
+      removedFromCompany[companyId]++;
+    }
 
     return condition;
   });

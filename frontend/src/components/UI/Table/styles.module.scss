@@ -19,6 +19,9 @@
 
   &__th {
     text-align: start;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   &__tr {
@@ -42,6 +45,10 @@
   &__footer {
     display: flex;
     width: 100%;
+
+    &_hidden {
+      opacity: 0;
+    }
   }
 
   &__last {
