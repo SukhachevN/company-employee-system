@@ -4,7 +4,7 @@ export const tableConfig: Record<keyof NotCreatedCompany, ITableConfigValue> = {
   title: {
     fieldName: 'Название',
     styles: {
-      width: '30%',
+      width: '15%',
     },
   },
   address: {
@@ -14,9 +14,9 @@ export const tableConfig: Record<keyof NotCreatedCompany, ITableConfigValue> = {
     },
   },
   employees: {
-    fieldName: 'Кол-во сотрудников',
+    fieldName: 'Cотрудников',
     styles: {
-      width: '15%',
+      width: '25%',
     },
   },
 };

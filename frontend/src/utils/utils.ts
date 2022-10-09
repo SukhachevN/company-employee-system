@@ -1,8 +1,8 @@
 import { ActionReducerMapBuilder, PayloadAction } from '@reduxjs/toolkit';
 import { useEffect, useState } from 'react';
-
 import { RootState } from '../App/store';
 import {
+  CNArgs,
   CompanyEntity,
   EmployeeEntity,
   fetchParams,
@@ -19,7 +19,10 @@ export const getResponse = async ({ link, options }: fetchParams) => {
     },
     ...options,
   });
+
   const result = await response.json();
+
+  if (!response.ok) throw new Error(result.error);
 
   return result;
 };
@@ -39,7 +42,6 @@ export const setExtraReducers = <T extends { id: string }>(
       const { results, endOfData } = action.payload;
       const { arg } = action.meta;
 
-      state.isLoading = false;
       if (arg && arg !== state.lastSearch) {
         state.lastSearch = arg;
         (state as IDefaultState<T>).entities = results;
@@ -47,6 +49,8 @@ export const setExtraReducers = <T extends { id: string }>(
       } else {
         (state as IDefaultState<T>).entities.push(...results);
       }
+
+      state.isLoading = false;
       state.endOfData = endOfData;
       state.entitiesError = null;
 
@@ -67,8 +71,8 @@ export const setExtraReducers = <T extends { id: string }>(
     });
 
     builder.addCase(post.fulfilled, (state, action) => {
-      (state.currentEntity as T) = action.payload;
       state.isEntityUpdating = false;
+      (state.currentEntity as T) = action.payload;
       (state.entities as T[]) = [action.payload, ...state.entities] as T[];
     });
 
@@ -84,10 +88,13 @@ export const setExtraReducers = <T extends { id: string }>(
     });
 
     builder.addCase(put.fulfilled, (state, action) => {
-      (state.currentEntity as T) = action.payload;
+      const updatedEntity = action.payload;
+
       state.isEntityUpdating = false;
+
+      (state.currentEntity as T) = updatedEntity;
       (state.entities as T[]) = state.entities.map((entity) =>
-        entity.id === action.payload.id ? action.payload : entity
+        entity.id === updatedEntity.id ? updatedEntity : entity
       ) as T[];
     });
 
@@ -99,8 +106,10 @@ export const setExtraReducers = <T extends { id: string }>(
 
   if (remove) {
     builder.addCase(remove.fulfilled, (state, action) => {
+      const removedIds = action.payload;
+
       state.entities = state.entities.filter(({ id }) => {
-        const condition = !action.payload.includes(id);
+        const condition = !removedIds.includes(id);
         !condition && delete state.selected[id];
 
         return condition;
@@ -123,7 +132,9 @@ export const createFetchThunk = async (
 ) => {
   const { page, entities, lastSearch } = state[key];
 
-  const currentPage = !entities.length || lastSearch !== searchQuery ? 1 : page;
+  const firstPageCondition = !entities.length || lastSearch !== searchQuery;
+
+  const currentPage = firstPageCondition ? 1 : page;
 
   const link = `${url}?page=${currentPage}${searchQuery || ''}`;
 
@@ -205,8 +216,6 @@ export const setSelected = <T extends { id: string }>(
   }
 };
 
-type CNArgs = string | Record<string, boolean>;
-
 export const cn = (...args: CNArgs[]) =>
   args
     .map((arg) =>
@@ -222,3 +231,10 @@ export const setCurrentEntity = <T extends { id: string }>(
     ({ id }) => id === action.payload
   ) as unknown as T extends ICompany ? CompanyEntity : EmployeeEntity;
 };
+
+export const resetError = (state: { currentEntityError: string | null }) => {
+  state.currentEntityError = null;
+};
+
+export const deepEquals = (a: unknown, b: unknown) =>
+  JSON.stringify(a) === JSON.stringify(b);

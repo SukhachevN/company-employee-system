@@ -81,3 +81,11 @@ export interface IEmployeeForTable {
   fullName: string;
   position: string;
 }
+
+export type CNArgs = string | Record<string, boolean>;
+
+export type TableCheckboxClick = (id: string, setAllTo?: boolean) => void;
+
+export type TableConfig<T> = Record<keyof Omit<T, 'id'>, ITableConfigValue>;
+
+export type KeysWithoutId<T> = keyof Omit<T, 'id'>;

@@ -1,7 +1,8 @@
+@import '../../utils/constants.scss';
+
 .spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include center;
+
   width: 100%;
   margin: auto;
   flex-basis: 100%;

@@ -17,6 +17,7 @@ import {
   createFetchThunk,
   createPostThunk,
   createPutThunk,
+  resetError,
   setCurrentEntity,
   setExtraReducers,
   setSelected,
@@ -78,6 +79,7 @@ export const companiesSlice = createSlice({
     setNewCompany: (state) => {
       state.currentEntity = { employees: 0 };
     },
+    resetCompanyError: resetError,
   },
   extraReducers: (builder) => {
     setExtraReducers<ICompany>(builder, extraReducers);
@@ -121,4 +123,5 @@ export const {
   setEmployeesCountForUodate,
   setCompany,
   setNewCompany,
+  resetCompanyError,
 } = companiesSlice.actions;

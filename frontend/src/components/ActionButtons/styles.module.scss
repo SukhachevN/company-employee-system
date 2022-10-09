@@ -6,6 +6,7 @@
 
   &__button {
     @include cleanButton;
+
     svg {
       width: toRem(16px);
       height: toRem(16px);
