@@ -15,6 +15,7 @@ import {
   createFetchThunk,
   createPostThunk,
   createPutThunk,
+  resetError,
   setCurrentEntity,
   setExtraReducers,
   setSelected,
@@ -84,6 +85,7 @@ export const employeesSlice = createSlice({
     setEmployeesCompany: (state, action: PayloadAction<string>) => {
       state.currentEntity = { companyId: action.payload };
     },
+    resetEmployeeError: resetError,
   },
   extraReducers: (builder) => {
     setExtraReducers<IEmployee>(builder, extraReducers);
@@ -92,5 +94,9 @@ export const employeesSlice = createSlice({
 
 export const { reducer: employeesReducer } = employeesSlice;
 
-export const { setSelectedEmployees, setEmployee, setEmployeesCompany } =
-  employeesSlice.actions;
+export const {
+  setSelectedEmployees,
+  setEmployee,
+  setEmployeesCompany,
+  resetEmployeeError,
+} = employeesSlice.actions;

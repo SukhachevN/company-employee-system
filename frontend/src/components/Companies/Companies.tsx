@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { useAppDispatch } from '../../App/hooks';
 import { useCompanies } from '../../utils/selectors';
 import { Table } from '../Table';
@@ -38,14 +38,18 @@ const Companies = memo(() => {
     []
   );
 
+  const onClick = useCallback(
+    (id: string, setAllTo?: boolean) =>
+      dispatch(setSelectedCompanies({ id, setAllTo })),
+    []
+  );
+
   return (
     <Table
       error={entitiesError}
       entities={entities}
       tableConfig={tableConfig}
-      onClick={(id, setAllTo) =>
-        dispatch(setSelectedCompanies({ id, setAllTo }))
-      }
+      onClick={onClick}
       fetchNext={fetchNext}
       selected={selected}
       isLoading={isLoading}

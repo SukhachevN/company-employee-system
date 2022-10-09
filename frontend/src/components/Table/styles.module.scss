@@ -4,14 +4,15 @@
   display: flex;
   gap: toRem(10px);
   flex-direction: column;
+  width: 100%;
 
   .deleteButton {
-    background: $red;
+    @include defaultButton($red, $red, $darkRed);
     color: white;
-    cursor: pointer;
     width: fit-content;
 
     &_disabled {
+      @include defaultButton($lightGray, $lightGray, $mediumGray);
       color: $black;
       background: $lightGray;
       cursor: not-allowed;
@@ -29,7 +30,6 @@
 
   &__header {
     width: 100%;
-
     display: flex;
   }
 
@@ -78,9 +78,15 @@
   &__error {
     @include center;
   }
+
+  &__actions {
+    width: toRem(100px);
+    margin-left: auto;
+  }
 }
 
 .checkbox {
+  max-width: toRem(50px);
   width: 10%;
   cursor: pointer;
 }

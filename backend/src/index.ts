@@ -16,7 +16,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
   res.json('Possible routes: /companies, /employees');
 });
 
@@ -49,6 +49,7 @@ app.get('/employees', (req, res) => {
 app.post('/companies', (req: Request<{}, {}, INotCreatedCompany>, res) => {
   const company = { ...req.body, id: uuid() };
   companies = [company, ...companies];
+
   res.json(company);
 });
 
@@ -56,15 +57,18 @@ app.post('/employees', (req: Request<{}, {}, INotCreatedEmployee>, res) => {
   const employee = { ...req.body, id: uuid() };
   const { companyId } = req.body;
   const company = companies.find(({ id }) => id === companyId);
+
   if (!company) {
     res
       .status(400)
-      .send(
-        'Компании, куда вы хотите добавить сотрудника больше не существует'
-      );
+      .send({
+        error:
+          'Компании, куда вы хотите добавить сотрудника больше не существует',
+      });
   } else {
     company.employees++;
-    employees.push(employee);
+    employees = [employee, ...employees];
+
     res.json(employee);
   }
 });
@@ -74,7 +78,9 @@ app.put('/companies', (req: Request<{}, {}, ICompany>, res) => {
   const index = companies.findIndex(({ id }) => id === company.id);
 
   if (!~index) {
-    res.status(400).send('Компания была удалена, либо не существовала');
+    res
+      .status(400)
+      .send({ error: 'Компания была удалена, либо не существовала' });
   } else {
     companies[index] = company;
     res.json(company);
@@ -86,7 +92,9 @@ app.put('/employees', (req: Request<{}, {}, IEmployee>, res) => {
   const index = employees.findIndex(({ id }) => id === employee.id);
 
   if (!~index) {
-    res.status(400).send('Сотрудник был удалён, либо не существовал');
+    res
+      .status(400)
+      .send({ error: 'Сотрудник был удалён, либо не существовал' });
   } else {
     employees[index] = employee;
     res.json(employee);
@@ -97,6 +105,7 @@ app.delete('/companies', (req: Request<{}, {}, string[]>, res) => {
   const ids = req.body;
   companies = companies.filter(({ id }) => !ids.includes(id));
   employees = employees.filter(({ companyId }) => !ids.includes(companyId));
+
   res.json(ids);
 });
 
@@ -123,6 +132,7 @@ app.delete('/employees', (req: Request<{}, {}, string[]>, res) => {
         }
       : company
   );
+
   res.json(ids);
 });
 

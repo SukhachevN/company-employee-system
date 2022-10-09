@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo } from 'react';
+import { memo, useCallback, useEffect, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../../App/hooks';
 import { ButtonHandlers } from '../../utils/interfaces';
 import {
@@ -54,6 +54,12 @@ const Employees = memo(() => {
     [entities]
   );
 
+  const onClick = useCallback(
+    (id: string, setAllTo?: boolean) =>
+      dispatch(setSelectedEmployees({ id, setAllTo })),
+    []
+  );
+
   useEffect(() => {
     dispatch(fetchEmployees(query));
   }, [query]);
@@ -62,9 +68,7 @@ const Employees = memo(() => {
     <Table
       error={entitiesError}
       entities={performedEntities}
-      onClick={(id, setAllTo) =>
-        dispatch(setSelectedEmployees({ id, setAllTo }))
-      }
+      onClick={onClick}
       fetchNext={fetchNext}
       selected={selected}
       tableConfig={tableConfig}

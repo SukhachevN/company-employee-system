@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-type formTypes = 'company' | 'employee' | null;
+export type formTypes = 'company' | 'employee' | null;
 
 interface IEditFormState {
   entityType: formTypes;
